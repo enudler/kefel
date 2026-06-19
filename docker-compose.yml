@@ -1,0 +1,18 @@
+# Homelab deployment for Kefel.
+# Pulls the image GitHub Actions publishes to GHCR — no local build needed.
+#
+#   docker compose pull && docker compose up -d
+#
+services:
+  kefel:
+    image: ghcr.io/enudler/kefel:latest
+    container_name: kefel
+    restart: unless-stopped
+    ports:
+      # Host:Container — change 8080 to whatever's free on your homelab.
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3

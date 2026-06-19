@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#6c5ce7" />
+  <title>Kefel · כֵּפֶל — Multiplication Game</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✖️</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Top bar -->
+    <header id="topbar">
+      <button id="homeBtn" class="icon-btn" aria-label="Home" title="Home">🏠</button>
+      <h1 id="title">Kefel ✖️</h1>
+      <button id="langBtn" class="icon-btn" aria-label="Language" title="Language">עב</button>
+    </header>
+
+    <!-- HOME / SETUP SCREEN -->
+    <section id="home" class="screen active">
+      <div class="mascot" id="mascotHome">🦊</div>
+      <p class="tagline" data-i18n="tagline">Let's practice multiplication!</p>
+
+      <h2 data-i18n="chooseTable">Choose a times table</h2>
+      <div id="tableGrid" class="grid"></div>
+
+      <h2 data-i18n="howMany">How many questions?</h2>
+      <div id="lengthRow" class="pill-row"></div>
+
+      <button id="startBtn" class="big-btn" data-i18n="start">Start! 🚀</button>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game" class="screen">
+      <div id="hud">
+        <div class="hud-item">⭐ <span id="score">0</span></div>
+        <div class="hud-item">🔥 <span id="streak">0</span></div>
+        <div class="hud-item"><span id="progress">0/0</span></div>
+      </div>
+      <div id="progressBar"><div id="progressFill"></div></div>
+
+      <div class="mascot" id="mascotGame">🦊</div>
+      <div id="question">3 × 4</div>
+
+      <div id="answers" class="grid answers-grid"></div>
+      <div id="feedback"></div>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section id="results" class="screen">
+      <div class="mascot big" id="mascotResults">🏆</div>
+      <h2 id="resultTitle" data-i18n="greatJob">Great job!</h2>
+      <div id="stars" class="stars"></div>
+      <p id="resultScore" class="result-score"></p>
+      <button id="againBtn" class="big-btn" data-i18n="playAgain">Play again 🔁</button>
+      <button id="changeBtn" class="ghost-btn" data-i18n="changeTable">Change table</button>
+    </section>
+  </div>
+
+  <canvas id="confetti"></canvas>
+  <script src="game.js"></script>
+</body>
+</html>
