@@ -3,8 +3,12 @@
 const I18N = {
   en: {
     title: "Kefel ✖️",
-    tagline: "Let's practice multiplication!",
+    tagline: "Let's practice math!",
+    practice: "What do you want to practice?",
+    multiply: "Multiply ✖️",
+    divide: "Divide ➗",
     chooseTable: "Choose a times table",
+    chooseDivide: "Choose a number to divide by",
     howMany: "How many questions?",
     start: "Start! 🚀",
     mixed: "Mixed 🎲",
@@ -20,8 +24,12 @@ const I18N = {
   },
   he: {
     title: "כֵּפֶל ✖️",
-    tagline: "!בואו נתרגל לוח הכפל",
+    tagline: "!בואו נתרגל חשבון",
+    practice: "?מה רוצים לתרגל",
+    multiply: "כפל ✖️",
+    divide: "חילוק ➗",
     chooseTable: "בחרו לוח כפל",
+    chooseDivide: "בחרו מספר לחלק בו",
     howMany: "?כמה שאלות",
     start: "!התחלה 🚀",
     mixed: "מעורב 🎲",
@@ -39,6 +47,7 @@ const I18N = {
 
 const state = {
   lang: localStorage.getItem("kefel.lang") || "en",
+  op: localStorage.getItem("kefel.op") || "multiply", // "multiply" | "divide"
   table: 2,        // 2..12 or "mixed"
   length: 10,
   queue: [],
@@ -86,8 +95,29 @@ function applyLang() {
   });
   $("title").textContent = dict.title;
   $("langBtn").textContent = dict.langBtn;
+  buildOpRow();
   buildTableGrid();
   buildLengthRow();
+}
+
+function buildOpRow() {
+  const row = $("opRow");
+  row.innerHTML = "";
+  [["multiply", t().multiply], ["divide", t().divide]].forEach(([op, label]) => {
+    const p = document.createElement("button");
+    p.className = "pill" + (state.op === op ? " selected" : "");
+    p.textContent = label;
+    p.onclick = () => {
+      state.op = op;
+      localStorage.setItem("kefel.op", op);
+      buildOpRow();
+      buildTableGrid();
+      $("tableHeading").textContent = op === "divide" ? t().chooseDivide : t().chooseTable;
+      beep(520, 0.06);
+    };
+    row.appendChild(p);
+  });
+  $("tableHeading").textContent = state.op === "divide" ? t().chooseDivide : t().chooseTable;
 }
 function toggleLang() {
   state.lang = state.lang === "en" ? "he" : "en";
@@ -99,10 +129,11 @@ function toggleLang() {
 function buildTableGrid() {
   const grid = $("tableGrid");
   grid.innerHTML = "";
+  const sym = state.op === "divide" ? "÷" : "×";
   for (let n = 2; n <= 12; n++) {
     const b = document.createElement("button");
     b.className = "tile" + (state.table === n ? " selected" : "");
-    b.textContent = "×" + n;
+    b.textContent = sym + n;
     b.onclick = () => { state.table = n; buildTableGrid(); beep(520, 0.06); };
     grid.appendChild(b);
   }
@@ -133,7 +164,13 @@ function buildQueue() {
   for (let i = 0; i < state.length; i++) {
     const a = state.table === "mixed" ? rand(2, 12) : state.table;
     const b = rand(2, 12);
-    q.push({ a, b });
+    if (state.op === "divide") {
+      // Build from a product so it always divides evenly into whole numbers.
+      const dividend = a * b;
+      q.push({ text: `${dividend} ÷ ${a}`, answer: b });
+    } else {
+      q.push({ text: `${a} × ${b}`, answer: a * b });
+    }
   }
   state.queue = q;
 }
@@ -162,8 +199,8 @@ function startGame() {
 
 function renderQuestion() {
   const q = state.queue[state.index];
-  const answer = q.a * q.b;
-  $("question").textContent = `${q.a} × ${q.b}`;
+  const answer = q.answer;
+  $("question").textContent = q.text;
   $("score").textContent = state.score;
   $("streak").textContent = state.streak;
   $("progress").textContent = `${state.index + 1}/${state.length}`;

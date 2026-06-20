@@ -9,7 +9,9 @@ tablets, no internet needed once loaded.
 
 ## What it does
 
-- Pick a times table (×2 to ×12) or **Mixed** for a challenge.
+- Choose **✖️ Multiply** or **➗ Divide** — division questions are built from a
+  multiplication, so the answer is always a whole number.
+- Pick a times table (×2 to ×12, or ÷2 to ÷12) or **Mixed** for a challenge.
 - Choose 5, 10, 15, or 20 questions.
 - Tap the right answer — get stars, streak bonuses, confetti, and sounds.
 - Gentle feedback shows the correct answer when a kid misses.
